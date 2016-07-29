@@ -1,9 +1,7 @@
-// run this script (by copy/paste) in browser's console
-
 (function() {
     // before executing the script, make sure object "config" is set accordingly
     var config = {
-        // string to search across values of the globally defined objects
+        // string to search across property values of the globally defined objects
         searchString: "",
         // returns paths to object properties, which values contain specified string above
         returnPaths: true,
