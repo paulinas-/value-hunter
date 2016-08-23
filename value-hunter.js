@@ -20,51 +20,59 @@
         var path = '';
         var pathKey = '';
         
-        JSON.stringify(obj, function(key, value) {
+        // wrapping inside try/catch block due to various JS errors that are sometimes thrown
+        try {
+            JSON.stringify(obj, function(key, value) {
 
-            // get back to object ancestor in order to maintain the correct path
-            for (var i = 0; i < tempKeyToObjectArray.length; i++)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-                if (tempKeyToObjectArray[i].parentObject == this)
-                    tempKeyToObjectArray.splice(i);
+                // get back to object ancestor in order to maintain the correct path
+                for (var i = 0; i < tempKeyToObjectArray.length; i++)
+                    if (tempKeyToObjectArray[i].parentObject == this)
+                        tempKeyToObjectArray.splice(i);
 
-            if (typeof value == 'object' && value !== null) {
-                tempKeyToObjectArray.push({key: key, parentObject: this});
+                if (typeof value == 'object' && value !== null) {
+                    tempKeyToObjectArray.push({key: key, parentObject: this});
 
-                if (alreadyStringifiedObjects.indexOf(value) !== -1) {
-                    // Circular reference found, discard key
-                    return;
-                }
-                // Store already stringified value in the collection
-                alreadyStringifiedObjects.push(value);
-            }
-
-            // path formation START
-            if (typeof value == 'string' && value.indexOf(config.searchString) > -1) {
-                path = globalVarName;
-                arrayOfValuesThatContainsSearchString.push(value);
-
-                for (var i = 0; i < tempKeyToObjectArray.length; i++) {
-                    pathKey = tempKeyToObjectArray[i].key;
-
-                    if (parseInt(pathKey) >= 0)
-                        path = path.concat('[' + pathKey + ']');
-                    else if (pathKey)
-                       path = path.concat('.' + pathKey);
+                    if (alreadyStringifiedObjects.indexOf(value) !== -1) {
+                        // Circular reference found, discard key
+                        return;
+                    }
+                    // Store already stringified value in the collection
+                    alreadyStringifiedObjects.push(value);
                 }
 
-                path = path.concat('.', key);
+                // path formation START
+                if (typeof value == 'string' && value.indexOf(config.searchString) > -1) {
+                    path = globalVarName;
+                    arrayOfValuesThatContainsSearchString.push(value);
 
-                if (arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1)
-                    arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
-            }
-            // path formation END
+                    for (var i = 0; i < tempKeyToObjectArray.length; i++) {
+                        pathKey = tempKeyToObjectArray[i].key;
 
-            return value;
-        });
+                        if (parseInt(pathKey) >= 0)
+                            path = path.concat('[' + pathKey + ']');
+                        else if (pathKey)
+                           path = path.concat('.' + pathKey);
+                    }
+
+                    path = path.concat('.', key);
+
+                    if (arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1)
+                        arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
+                }
+                // path formation END
+
+                return value;
+            });
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
     // needed to prevent DOMExceptions for webpages that uses iframes
-    $('iframe').remove();
+    document.querySelectorAll('iframe').forEach(function(val){
+        val.remove();
+    });
 
     for(var prop in window){
         globalVarName = prop;
