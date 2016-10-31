@@ -1,8 +1,12 @@
 (function() {
     // before executing the script, make sure object "config" is set accordingly
     var config = {
-        // string to search across property values of the globally defined objects
-        searchString: "",
+        // 0 - property string/number values
+        // 1 - function names
+        // 2 - property names (except funtions)
+        searchWhere: 0,
+        // string to search
+        searchWhat: "",
         // returns paths to object properties, which values contain specified string above
         returnPaths: true,
         // returns full object property values containing specified string above
@@ -12,6 +16,7 @@
     var arrayOfPathsToObjectPropertyThatContainsSearchString = [];
     var arrayOfValuesThatContainsSearchString = [];
     var globalVarName;
+    var searchCriteria;
     var stringifyGlobalVar = function stringifyGlobalVar(obj) {
         // array used to handle circular refs exceptions
         var alreadyStringifiedObjects = [];
@@ -40,8 +45,18 @@
                     alreadyStringifiedObjects.push(value);
                 }
 
+                if (config.searchWhere == 1)
+                    searchCriteria = typeof value == 'function' && key.toLowerCase().indexOf(config.searchWhat) > -1;
+                else if (config.searchWhere == 2)
+                    searchCriteria = typeof value != 'function' && key.toLowerCase().indexOf(config.searchWhat) > -1;
+                // config.searchWhere == 0
+                else
+                    searchCriteria = 
+                        (typeof value == 'string' && value.toLowerCase().indexOf(config.searchWhat) > -1) ||
+                        (typeof value == 'number' && value.toString().indexOf(config.searchWhat) > -1);
+                
                 // path formation START
-                if (typeof value == 'string' && value.indexOf(config.searchString) > -1) {
+                if (searchCriteria) {
                     path = globalVarName;
                     arrayOfValuesThatContainsSearchString.push(value);
 
