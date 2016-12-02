@@ -98,7 +98,10 @@
     }
 
     for (var i = 0; i < arrayOfPathsToObjectPropertyThatContainsSearchString.length; i++)
-        output += 'PATH:\r\n  ' + arrayOfPathsToObjectPropertyThatContainsSearchString[i] + '\r\nVALUE:\r\n  ' + arrayOfValuesThatContainsSearchString[i] + '\r\n----------------------------------------\r\n';
+        output += 
+            '\r\nPATH:\r\n  ' + arrayOfPathsToObjectPropertyThatContainsSearchString[i] + 
+            '\r\nVALUE:\r\n  ' + arrayOfValuesThatContainsSearchString[i] + 
+            '\r\n----------------------------------------';
 
     console.log(output);
 })();
