@@ -56,7 +56,6 @@
                     // path formation START
                     if (searchCriteria) {
                         path = globalVarName;
-                        //arrayOfValuesThatContainsSearchString.push(value);
 
                         for (var i = 0; i < tempKeyToObjectArray.length; i++) {
                             pathKey = tempKeyToObjectArray[i].key;
@@ -69,7 +68,7 @@
 
                         path = path.concat('.', key);
 
-                        if (arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
+                        if (path.match(/^window\./) && arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
                             arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
                             arrayOfValuesThatContainsSearchString.push(value);
                         }
