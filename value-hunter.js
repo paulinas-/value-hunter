@@ -4,19 +4,15 @@
         // 0 - property string/number values
         // 1 - function names
         // 2 - property names (except funtions)
-        searchWhere: 0,
+        searchWhere: 2,
         // string to search
-        searchWhat: "",
-        // returns paths to object properties, which values contain specified string above
-        returnPaths: true,
-        // returns full object property values containing specified string above
-        returnValues: false
-
+        searchWhat: ['avail','count','quant','qty','inven','stock'],
     }
     var arrayOfPathsToObjectPropertyThatContainsSearchString = [];
     var arrayOfValuesThatContainsSearchString = [];
     var globalVarName;
     var searchCriteria;
+    var output = '';
     var stringifyGlobalVar = function stringifyGlobalVar(obj) {
         // array used to handle circular refs exceptions
         var alreadyStringifiedObjects = [];
@@ -45,36 +41,41 @@
                     alreadyStringifiedObjects.push(value);
                 }
 
-                if (config.searchWhere == 1)
-                    searchCriteria = typeof value == 'function' && key.toLowerCase().indexOf(config.searchWhat) > -1;
-                else if (config.searchWhere == 2)
-                    searchCriteria = typeof value != 'function' && key.toLowerCase().indexOf(config.searchWhat) > -1;
-                // config.searchWhere == 0
-                else
-                    searchCriteria = 
-                        (typeof value == 'string' && value.toLowerCase().indexOf(config.searchWhat) > -1) ||
-                        (typeof value == 'number' && value.toString().indexOf(config.searchWhat) > -1);
-                
-                // path formation START
-                if (searchCriteria) {
-                    path = globalVarName;
-                    arrayOfValuesThatContainsSearchString.push(value);
+                config.searchWhat.forEach(function(e) {
 
-                    for (var i = 0; i < tempKeyToObjectArray.length; i++) {
-                        pathKey = tempKeyToObjectArray[i].key;
+                    if (config.searchWhere == 1)
+                        searchCriteria = typeof value == 'function' && key.toLowerCase().indexOf(e) > -1;
+                    else if (config.searchWhere == 2)
+                        searchCriteria = typeof value != 'function' && key.toLowerCase().indexOf(e) > -1;
+                    // config.searchWhere == 0
+                    else
+                        searchCriteria = 
+                            (typeof value == 'string' && value.toLowerCase().indexOf(e) > -1) ||
+                            (typeof value == 'number' && value.toString().indexOf(e) > -1);
+                    
+                    // path formation START
+                    if (searchCriteria) {
+                        path = globalVarName;
+                        //arrayOfValuesThatContainsSearchString.push(value);
 
-                        if (parseInt(pathKey) >= 0)
-                            path = path.concat('[' + pathKey + ']');
-                        else if (pathKey)
-                           path = path.concat('.' + pathKey);
+                        for (var i = 0; i < tempKeyToObjectArray.length; i++) {
+                            pathKey = tempKeyToObjectArray[i].key;
+
+                            if (parseInt(pathKey) >= 0)
+                                path = path.concat('[' + pathKey + ']');
+                            else if (pathKey)
+                               path = path.concat('.' + pathKey);
+                        }
+
+                        path = path.concat('.', key);
+
+                        if (arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
+                            arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
+                            arrayOfValuesThatContainsSearchString.push(value);
+                        }
                     }
-
-                    path = path.concat('.', key);
-
-                    if (arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1)
-                        arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
-                }
-                // path formation END
+                    // path formation END
+                });
 
                 return value;
             });
@@ -96,10 +97,8 @@
             stringifyGlobalVar(window[prop]);
     }
 
-    if (config.returnPaths)
-        console.log(arrayOfPathsToObjectPropertyThatContainsSearchString.join('\r\n*\r\n'));
-    
-    if (config.returnValues)
-        console.log(arrayOfValuesThatContainsSearchString.join('\r\n*\r\n'));
+    for (var i = 0; i < arrayOfPathsToObjectPropertyThatContainsSearchString.length; i++)
+        output += 'PATH:\r\n  ' + arrayOfPathsToObjectPropertyThatContainsSearchString[i] + '\r\nVALUE:\r\n  ' + arrayOfValuesThatContainsSearchString[i] + '\r\n----------------------------------------\r\n';
 
+    console.log(output);
 })();
