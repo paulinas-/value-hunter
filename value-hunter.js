@@ -6,7 +6,7 @@
         // 2 - property names (except funtions)
         searchWhere: 2,
         // string to search
-        searchWhat: ['avail','count','quant','qty','inven','stock'],
+        searchWhat: [],
     }
     var arrayOfPathsToObjectPropertyThatContainsSearchString = [];
     var arrayOfValuesThatContainsSearchString = [];
