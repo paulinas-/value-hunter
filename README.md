@@ -2,6 +2,17 @@
 
 This JavaScript snippet is **intended** to be executed in a web browser's console. 
 
-The **purpose** of the snippet is to search for a specified string across all property values (wildcard search) of a globally defined JavaScript objects (properties of a "window" object) in a scope of a webpage.
+The **purpose** of the snippet is to traverse all globally defined JavaScript objects (properties of a "window" object) in a scope of a webpage and find (wildcard search) a specified string in one of the following (configurable): 
+- property values
+- function names
+- property names (except funtions)
 
-The snippet **returns** a list of found values or/and a list of paths pointing to object properties holding those values.
+The snippet **returns** a list of paths to object properties and their values matching the search in the following format:
+```
+----------------------------------------
+PATH:
+  window.ParentObject.ChildObject.PropertyName
+VALUE:
+  value that the property is storing
+----------------------------------------
+```
