@@ -52,7 +52,8 @@
                     var isNumberValue = typeof value == 'number';
                     var isStringValue = typeof value == 'string';
                     var isFunction = typeof value == 'function';
-
+                    var isObject = typeof value == 'object';
+                    
                     // make search case insensitive
                     var keyTemp = key.toLowerCase();
                     var valueTemp = value;
@@ -72,7 +73,7 @@
                     if (config.searchWhere == 1)
                         isMatchingSearch = isFunction && isKeyMatch;
                     else if (config.searchWhere == 2)
-                        isMatchingSearch = (isStringValue || isNumberValue) && isKeyMatch;
+                        isMatchingSearch = (isStringValue || isNumberValue || isObject) && isKeyMatch;
                     // config.searchWhere == 0
                     else if (isNumberValue || isStringValue) {
                         var isValueMatch = config.searchHow ? valueTemp === e : valueTemp.indexOf(e) > -1;
