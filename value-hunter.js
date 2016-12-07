@@ -1,17 +1,21 @@
 (function() {
     // before executing the script, make sure object "config" is set accordingly
     var config = {
-        // 0 - property string/number values
-        // 1 - function names
-        // 2 - property names (except funtions)
-        searchWhere: 2,
-        // string to search
+        // 0 - values of the properties, that hold "string" or "number" type values only
+        // 1 - names of the properties, that hold "function" type values only
+        // 2 - names of the properties, that hold "string" or "number" type values only
+        searchWhere: 0,
+        // string to search (if you need to search for a number - add it inside quotes)
+        // the search is case insensitive
         searchWhat: [],
+        // 0 - wildcard search
+        // 1 - exact word/phrase/number search
+        searchHow: 0
     }
     var arrayOfPathsToObjectPropertyThatContainsSearchString = [];
     var arrayOfValuesThatContainsSearchString = [];
     var globalVarName;
-    var searchCriteria;
+    var isMatchingSearch;
     var output = '';
     var stringifyGlobalVar = function stringifyGlobalVar(obj) {
         // array used to handle circular refs exceptions
@@ -43,18 +47,41 @@
 
                 config.searchWhat.forEach(function(e) {
 
+                    isMatchingSearch = false;
+
+                    var isNumberValue = typeof value == 'number';
+                    var isStringValue = typeof value == 'string';
+                    var isFunction = typeof value == 'function';
+
+                    // make search case insensitive
+                    var keyTemp = key.toLowerCase();
+                    var valueTemp = value;
+
+                    if (isStringValue)
+                        valueTemp = value.toLowerCase();
+                    else if (isNumberValue)
+                        valueTemp = value.toString();
+
+                    e = e.toLowerCase();
+
+                    var isKeyMatch = keyTemp.indexOf(e) > -1;
+
+                    if (config.searchHow)
+                        isKeyMatch = keyTemp === e;
+
                     if (config.searchWhere == 1)
-                        searchCriteria = typeof value == 'function' && key.toLowerCase().indexOf(e) > -1;
+                        isMatchingSearch = isFunction && isKeyMatch;
                     else if (config.searchWhere == 2)
-                        searchCriteria = typeof value != 'function' && key.toLowerCase().indexOf(e) > -1;
+                        isMatchingSearch = (isStringValue || isNumberValue) && isKeyMatch;
                     // config.searchWhere == 0
-                    else
-                        searchCriteria = 
-                            (typeof value == 'string' && value.toLowerCase().indexOf(e) > -1) ||
-                            (typeof value == 'number' && value.toString().indexOf(e) > -1);
+                    else if (isNumberValue || isStringValue) {
+                        var isValueMatch = config.searchHow ? valueTemp === e : valueTemp.indexOf(e) > -1;
+                        
+                        isMatchingSearch = isValueMatch;
+                    }
                     
                     // path formation START
-                    if (searchCriteria) {
+                    if (isMatchingSearch) {
                         path = globalVarName;
 
                         for (var i = 0; i < tempKeyToObjectArray.length; i++) {
