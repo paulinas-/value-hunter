@@ -88,7 +88,7 @@
                         for (var i = 0; i < tempKeyToObjectArray.length; i++) {
                             pathKey = tempKeyToObjectArray[i].key;
 
-                            if (pathKey && pathKey.match(/[^a-zA-Z0-9]/) === null)
+                            if (pathKey && pathKey.match(/[^a-zA-Z]/) === null)
                                 path = path.concat('.' + pathKey);
                             else if (pathKey)
                                 path = path.concat('["' + pathKey + '"]');
