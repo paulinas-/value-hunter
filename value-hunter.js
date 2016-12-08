@@ -88,13 +88,15 @@
                         for (var i = 0; i < tempKeyToObjectArray.length; i++) {
                             pathKey = tempKeyToObjectArray[i].key;
 
-                            if (parseInt(pathKey) >= 0)
-                                path = path.concat('[' + pathKey + ']');
+                            if (pathKey && pathKey.match(/[^a-zA-Z0-9]/) === null)
+                                path = path.concat('.' + pathKey);
                             else if (pathKey)
-                               path = path.concat('.' + pathKey);
+                                path = path.concat('["' + pathKey + '"]');
                         }
 
-                        path = path.concat('.', key);
+                        // avoid property name duplication (f.e. window.parent.child_1.child_2.child_2)
+                        if (!isObject)
+                            path = path.concat('.', key);
 
                         if (path.match(/^window\./) && arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
                             arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
