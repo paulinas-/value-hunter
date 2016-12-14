@@ -2,7 +2,7 @@
 
 This JavaScript snippet is **intended** to be executed in a web browser's console. 
 
-The **purpose** of the snippet is to traverse all globally defined JavaScript objects (properties of a "window" object) in a scope of a webpage and find (wildcard search) a specified string in one of the following (configurable): 
+The **purpose** of the snippet is to traverse all globally defined JavaScript objects (properties of a "window" object) in a scope of a webpage and find (_wildcard_ or _exact_ search - configurable in the script) a specified string in one of the following (configurable in the script): 
 - property values
 - function names
 - property names (except funtions)
