@@ -98,7 +98,7 @@
                         if (!isObject)
                             path = path.concat('.', key);
 
-                        if (path.match(/^window\./) && arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
+                        if (path.match(/^window/) && arrayOfPathsToObjectPropertyThatContainsSearchString.indexOf(path) == -1) {
                             arrayOfPathsToObjectPropertyThatContainsSearchString.push(path);
                             arrayOfValuesThatContainsSearchString.push(value);
                         }
